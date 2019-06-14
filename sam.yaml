@@ -1,0 +1,34 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: A Lambda to send SNS messages to a Slack channel
+
+Globals:
+  Function:
+    Timeout: 5
+    MemorySize: 128
+
+Resources:
+  SNSSlackNotifier:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'SNSSlackNotifier'
+      Handler: sns-slack-notifier
+      Runtime: go1.x
+      CodeUri: .
+      Tracing: Active
+      Events:
+        SNSTopic:
+          Type: SNS
+          Properties:
+            Topic: !Ref SNSSlackNotifierTopic
+      Environment:
+        Variables:
+          CHANNEL: ''
+          USERNAME: ''
+          TOKEN: ''
+
+  SNSSlackNotifierTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      DisplayName: SNSSlackNotifierTopic
