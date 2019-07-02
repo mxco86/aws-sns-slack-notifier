@@ -13,7 +13,7 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'SNSSlackNotifier'
-      Handler: sns-slack-notifier
+      Handler: aws-sns-slack-notifier
       Runtime: go1.x
       CodeUri: .
       Tracing: Active
