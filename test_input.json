@@ -1,0 +1,9 @@
+{ "Records":
+  [
+    {
+      "Sns": {
+        "Message": "{ \"detail-type\": \"TEST DETAIL\", \"detail\": {\"action\":\"TESTACTION\"} }"
+      }
+    }
+  ]
+}

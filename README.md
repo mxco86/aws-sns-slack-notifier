@@ -7,7 +7,9 @@ a readable Slack message and post the message to a Slack instance.
 ## Configuration
 
 The Slack token, channel and posting username must be configured via
-environment variables in the Lambda instance
+environment variables in the Lambda instance. Values for these variables can
+be added to the CloudFormation stack via the SAM configuration file before
+building
 
 | Env Var  | Purpose                                                 |
 |----------|---------------------------------------------------------|
@@ -42,14 +44,10 @@ The code can be tested locally using the standard SAM commands or directly
 using a lambci docker container
 
 ```sh
-
-# Run locally in docker container
+# Run locally in docker container (after building and from the root directory)
 docker run --rm -v "$PWD":/var/task \
---env CHANNEL="A Slack Channel ID" \
---env USERNAME="An Arbitrary Username to Post As" \
---env TOKEN="A Slack Legacy API Token" \
-lambci/lambda:go1.x aws-sns-slack-notifier \
-"{ \"Records\": [ { \"Sns\": {\"Message\": \"A Test Message\"} },
- { \"Sns\": {\"Message\": \"Another Test Message\"} } ] }"
-
+       --env CHANNEL="A Slack Channel ID" \
+       --env USERNAME="An Arbitrary Username to Post As" \
+       --env TOKEN="A Slack Legacy API Token" \
+       lambci/lambda:go1.x aws-sns-slack-notifier "$(< ./test_input)"
 ```
