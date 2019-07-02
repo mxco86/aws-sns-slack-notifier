@@ -1,2 +1,3 @@
 test-env.json
 aws-sns-slack-notifier
+sam-pkg.yaml
