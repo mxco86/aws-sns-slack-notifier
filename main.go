@@ -8,7 +8,6 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/mxco86/awstypes"
 )
 
 // SlackChannel -- A channel
@@ -16,6 +15,15 @@ type SlackChannel struct {
 	Token    string `json:"token"`
 	Channel  string `json:"channel"`
 	Username string `json:"username"`
+}
+
+// CodePipelineEventDetail -- A codepipeline detail
+type CodePipelineEventDetail struct {
+	Pipeline string `json:"pipeline"`
+	Stage    string `json:"stage"`
+	Action   string `json:"action"`
+	State    string `json:"state"`
+	ID       string `json:"execution-id"`
 }
 
 // Lambda handler wrapper for the Slack notifier function. Context and Event
@@ -34,7 +42,7 @@ func handler(ctx context.Context, snsEvent events.SNSEvent) (err error) {
 		snsRecord := record.SNS
 
 		// Process the raw incoming JSON message into a struct
-		var snsCodePipelineMessage awstypes.SNSCodePipelineMessage
+		var snsCodePipelineMessage events.CloudWatchEvent
 		inputErr := json.Unmarshal([]byte(snsRecord.Message), &snsCodePipelineMessage)
 		if inputErr != nil {
 			return fmt.Errorf("Input event error: %v", inputErr)
@@ -58,11 +66,19 @@ func handler(ctx context.Context, snsEvent events.SNSEvent) (err error) {
 	return
 }
 
-func formatSlackMessage(inc awstypes.SNSCodePipelineMessage) (msg string, err error) {
+func formatSlackMessage(inc events.CloudWatchEvent) (msg string, err error) {
+
+	// Unmarshal the event detail as it is imported as raw JSON
+	var codePipelineEventDetail CodePipelineEventDetail
+	JSONErr := json.Unmarshal([]byte(inc.Detail), &codePipelineEventDetail)
+	if JSONErr != nil {
+		return "", fmt.Errorf("Input event error: %v", JSONErr)
+	}
+
 	return fmt.Sprintf(
 		"*Type:* %s\n *Action:* %s",
 		inc.DetailType,
-		inc.Detail.Action), nil
+		codePipelineEventDetail.Action), nil
 
 }
 

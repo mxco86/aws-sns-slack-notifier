@@ -1,23 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"regexp"
 	"testing"
 
-	"github.com/mxco86/awstypes"
+	"github.com/aws/aws-lambda-go/events"
 )
 
 func TestFormatSlackMessage(t *testing.T) {
 
-	sns := awstypes.SNSCodePipelineMessage{
+	sns := events.CloudWatchEvent{
 		DetailType: "TestDetail",
+		Detail:     json.RawMessage(`{"Action": "TestAction"}`),
 	}
-
-	sns.Detail.Pipeline = ""
-	sns.Detail.Stage = ""
-	sns.Detail.Action = "TestAction"
-	sns.Detail.State = ""
-	sns.Detail.ID = ""
 
 	msg, err := formatSlackMessage(sns)
 	if err != nil {
