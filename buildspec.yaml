@@ -1,6 +1,11 @@
 ---
 version: 0.2
 phases:
+  install:
+    commands:
+      - apk update
+      - apk add py-pip
+      - pip install awscli
   build:
     commands:
       - aws cloudformation package --template-file sam.yaml
