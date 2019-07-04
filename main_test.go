@@ -12,7 +12,7 @@ func TestFormatSlackMessage(t *testing.T) {
 
 	sns := events.CloudWatchEvent{
 		DetailType: "TestDetail",
-		Detail:     json.RawMessage(`{"Action": "TestAction"}`),
+		Detail:     json.RawMessage(`{"Stage": "TestStage"}`),
 	}
 
 	msg, err := formatSlackMessage(sns)
@@ -20,7 +20,7 @@ func TestFormatSlackMessage(t *testing.T) {
 		t.Errorf("Slack message failure")
 	}
 
-	matched, err := regexp.MatchString(".*TestDetail\n.*TestAction", msg)
+	matched, err := regexp.MatchString(".*TestDetail\n.*\n.*TestStage", msg)
 	if matched == false {
 		t.Errorf("Slack message built incorrectly")
 	}
