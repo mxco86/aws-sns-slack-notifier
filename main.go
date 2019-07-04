@@ -76,9 +76,11 @@ func formatSlackMessage(inc events.CloudWatchEvent) (msg string, err error) {
 	}
 
 	return fmt.Sprintf(
-		"*Type:* %s\n *Action:* %s",
+		"*Type:* %s\n *Action:* %s\nState %s",
 		inc.DetailType,
-		codePipelineEventDetail.Action), nil
+		codePipelineEventDetail.Action,
+		codePipelineEventDetail.State,
+	), nil
 
 }
 
