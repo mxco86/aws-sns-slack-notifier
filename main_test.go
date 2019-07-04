@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"regexp"
+	// "regexp"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -20,8 +20,11 @@ func TestFormatSlackMessage(t *testing.T) {
 		t.Errorf("Slack message failure")
 	}
 
-	matched, err := regexp.MatchString(".*TestDetail\n.*\n.*TestStage", msg)
-	if matched == false {
-		t.Errorf("Slack message built incorrectly")
+	if len(msg) != 2 {
+		t.Errorf("Slack message built incorrectly: %d", len(msg))
 	}
+	// matched, err := regexp.MatchString(".*TestDetail\n.*\n.*TestStage", msg)
+	// if matched == false {
+	// 	t.Errorf("Slack message built incorrectly")
+	// }
 }

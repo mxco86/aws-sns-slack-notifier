@@ -49,14 +49,15 @@ func handler(ctx context.Context, snsEvent events.SNSEvent) (err error) {
 		}
 
 		// Format the slack message
-		msg, _ := formatSlackMessage(snsCodePipelineMessage)
+		fields, _ := formatSlackMessage(snsCodePipelineMessage)
 
 		// Send the slack message to the configured channel
 		err = SlackPost(
 			slackChannel.Token,
 			slackChannel.Channel,
 			slackChannel.Username,
-			msg)
+			snsCodePipelineMessage.DetailType,
+			fields)
 
 		if err != nil {
 			return err
@@ -64,32 +65,6 @@ func handler(ctx context.Context, snsEvent events.SNSEvent) (err error) {
 	}
 
 	return
-}
-
-func formatSlackMessage(inc events.CloudWatchEvent) (msg string, err error) {
-
-	// Unmarshal the event detail as it is imported as raw JSON
-	var codePipelineEventDetail CodePipelineEventDetail
-	JSONErr := json.Unmarshal([]byte(inc.Detail), &codePipelineEventDetail)
-	if JSONErr != nil {
-		return "", fmt.Errorf("Input event error: %v", JSONErr)
-	}
-
-	return fmt.Sprintf(
-		`.          *Type:* %s
-		*Pipeline:* %s
-		*    Stage:* %s
-		*  Action:* %s
-		*    State:* %s
-		*         ID:* %s`,
-		inc.DetailType,
-		codePipelineEventDetail.Pipeline,
-		codePipelineEventDetail.Stage,
-		codePipelineEventDetail.Action,
-		codePipelineEventDetail.State,
-		codePipelineEventDetail.ID,
-	), nil
-
 }
 
 // Entrypoint for the lambda execution

@@ -2,7 +2,7 @@
   [
     {
       "Sns": {
-        "Message": "{ \"detail-type\": \"TEST DETAIL\", \"detail\": {\"action\":\"TESTACTION\"} }"
+        "Message": "{ \"detail-type\": \"TEST DETAIL\", \"detail\": {\"action\":\"TESTACTION\",\"pipeline\":\"TESTPIPELINE\", \"state\":\"TESTSTATE\",\"execution-id\":\"TESTID\" } }"
       }
     }
   ]
