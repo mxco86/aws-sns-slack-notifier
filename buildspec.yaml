@@ -4,12 +4,14 @@ phases:
   install:
     runtime-versions:
       golang: 1.12
+  build:
     commands:
       - go get github.com/aws/aws-lambda-go/events
       - go get github.com/nlopes/slack
-  build:
-    commands:
+      - go test
       - go build -o aws-sns-slack-notifier
+  post_build:
+    commands:
       - aws cloudformation package --template-file sam.yaml
                                    --s3-bucket mxco86-deployment
                                    --output-template-file sam-pkg.yaml
