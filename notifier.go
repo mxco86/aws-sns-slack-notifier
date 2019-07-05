@@ -37,7 +37,8 @@ func formatSlackMessage(inc events.CloudWatchEvent) (msg []*slack.TextBlockObjec
 			continue
 		}
 
-		// Create field and value blocks which will display in Slack as a table
+		// Create field and value blocks which will display in Slack
+		// as a table
 		fieldBlock := slack.NewTextBlockObject(
 			"mrkdwn",
 			fmt.Sprintf("*%s*", field),
@@ -55,16 +56,22 @@ func formatSlackMessage(inc events.CloudWatchEvent) (msg []*slack.TextBlockObjec
 }
 
 // SlackPost - post a message to Slack
-func SlackPost(token string, channel string, username string, header string, fields []*slack.TextBlockObject) error {
+func SlackPost(
+	token string, channel string, username string,
+	header string, fields []*slack.TextBlockObject) error {
 
-	headerText := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf("*%s*", header), false, false)
+	// Create header and fields blocks
+	headerText := slack.NewTextBlockObject(
+		"mrkdwn", fmt.Sprintf("*%s*", header), false, false,
+	)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 	fieldsSection := slack.NewSectionBlock(nil, fields, nil)
 
 	// Create a Slack API client using a legacy token
 	client := slack.New(token)
 
-	// Post the message to Slack as a user
+	// Post the message to Slack as a user - include all blocks and the
+	// header value as plain text
 	_, _, err := client.PostMessage(
 		channel,
 		slack.MsgOptionText(header, false),
