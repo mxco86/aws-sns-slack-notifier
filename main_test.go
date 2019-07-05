@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	// "regexp"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -10,9 +9,10 @@ import (
 
 func TestFormatSlackMessage(t *testing.T) {
 
+	// Create a test event
 	sns := events.CloudWatchEvent{
 		DetailType: "TestDetail",
-		Detail:     json.RawMessage(`{"Stage": "TestStage"}`),
+		Detail:     json.RawMessage(`{"State": "TestState"}`),
 	}
 
 	msg, err := formatSlackMessage(sns)
@@ -20,12 +20,13 @@ func TestFormatSlackMessage(t *testing.T) {
 		t.Errorf("Slack message failure")
 	}
 
-	if len(msg) != 2 {
+	// Two block element pairs should be built from the test event
+	if len(msg) != 4 {
 		t.Errorf("Slack message built incorrectly: %d", len(msg))
 	}
 
-	// matched, err := regexp.MatchString(".*TestDetail\n.*\n.*TestStage", msg)
-	// if matched == false {
-	// 	t.Errorf("Slack message built incorrectly")
-	// }
+	// Check the value text in the second block
+	if msg[3].Text != "TestState" {
+		t.Errorf("Slack message value error: %s", msg[3].Text)
+	}
 }
