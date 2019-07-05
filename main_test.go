@@ -23,6 +23,7 @@ func TestFormatSlackMessage(t *testing.T) {
 	if len(msg) != 2 {
 		t.Errorf("Slack message built incorrectly: %d", len(msg))
 	}
+
 	// matched, err := regexp.MatchString(".*TestDetail\n.*\n.*TestStage", msg)
 	// if matched == false {
 	// 	t.Errorf("Slack message built incorrectly")

@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/nlopes/slack"
 
 	"encoding/json"
+
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -20,14 +22,15 @@ func formatSlackMessage(inc events.CloudWatchEvent) (msg []*slack.TextBlockObjec
 		return fieldSlice, fmt.Errorf("Input event error: %v", JSONErr)
 	}
 
-	blocks := make(map[string]string)
-	blocks["Type"] = inc.DetailType
-	blocks["Action"] = codePipelineEventDetail.Action
-	blocks["Pipeline"] = codePipelineEventDetail.Pipeline
-	blocks["State"] = codePipelineEventDetail.State
-	blocks["ID"] = codePipelineEventDetail.ID
+	fields := map[string]string{
+		"Type":     inc.DetailType,
+		"Action":   codePipelineEventDetail.Action,
+		"Pipeline": codePipelineEventDetail.Pipeline,
+		"State":    codePipelineEventDetail.State,
+		"ID":       codePipelineEventDetail.ID,
+	}
 
-	for field, value := range blocks {
+	for field, value := range fields {
 
 		// Skip block creation if we have no value
 		if value == "" {
